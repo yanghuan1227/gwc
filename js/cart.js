@@ -6,7 +6,7 @@ $(() => {
   if (jsonStr !== null) {
     arr = JSON.parse(jsonStr);
     //遍历数组 生成结构
-    let html ='';
+    let html = '';
     arr.forEach(e => {
       html += `<div class="item" data-id="${e.pID}">
             <div class="row">
@@ -51,5 +51,25 @@ $(() => {
     $('.total-of').removeClass('hidden');
   }
 
-
+  //计算总和和总价
+  function sumPrice() {
+    // 算出总计里面的总数量和总价
+    // 根据选中的多选框，得到选中的商品的id
+    let totalCount = 0;
+    let totalMoney = 0;
+    $('.item-list input[type=checkbox]:checked').each((i, e) => {
+      let id =parseInt($(e).parents('.item').attr('data-id'));
+      arr.forEach(e=>{
+        if(id === e.pID){
+          //勾选在本地存储中的数据
+          totalCount+= e.number;
+          totalMoney+= e.number *e.price;
+        };
+      });
+    });
+    //修改数量和总价
+    $('.selected').text(totalCount);
+    $('.total-money').text(totalMoney);
+  }
+  sumPrice();
 })
