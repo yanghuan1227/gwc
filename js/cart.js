@@ -58,12 +58,12 @@ $(() => {
     let totalCount = 0;
     let totalMoney = 0;
     $('.item-list input[type=checkbox]:checked').each((i, e) => {
-      let id =parseInt($(e).parents('.item').attr('data-id'));
-      arr.forEach(e=>{
-        if(id === e.pID){
+      let id = parseInt($(e).parents('.item').attr('data-id'));
+      arr.forEach(e => {
+        if (id === e.pID) {
           //勾选在本地存储中的数据
-          totalCount+= e.number;
-          totalMoney+= e.number *e.price;
+          totalCount += e.number;
+          totalMoney += e.number * e.price;
         };
       });
     });
@@ -72,4 +72,23 @@ $(() => {
     $('.total-money').text(totalMoney);
   }
   sumPrice();
-})
+
+  //实现全选和全不选
+  $('.pick-all').on('click', function () {
+    // 看看自己当前的状态
+    let status = $(this).prop('checked');
+    // 设置每个商品都和自己一样
+    $('.item-ck').prop('checked', status);
+    // 还要把上下两个全选都同步
+    $('.pick-all').prop('checked', status);
+    sumPrice();
+  })
+
+  //用委托来实现
+  $('.item-ck').on('click', function () {
+    // 判断是否全选 - 如果选中的个数和所有的个数是一致的，就是全选了
+    let isAll = $('.item-ck').length === $('.item-ck:checked').length;
+    $('.pick-all').prop('checked', isAll);
+    sumPrice();
+  })
+});
