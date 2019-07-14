@@ -91,4 +91,34 @@ $(() => {
     $('.pick-all').prop('checked', isAll);
     sumPrice();
   })
+
+  //使用委托的方式加减
+  $('.item-list').on('click', '.add', function () {
+    // 点击加号，把对应的输入框的文字进行+1
+    // 得到旧的数据
+    let oldVal = parseInt($(this).siblings('input').val());
+    oldVal++;
+    if (oldVal > 1) {
+      $(this).siblings('.reduce').removeClass('disabled');
+    }
+    //设置回去
+    $(this).siblings('input').val(oldVal);
+    // 把本地存储里面的数据，更新
+    // 判断依据是 点击的按钮对应的商品的id
+
+    let id = parseInt($(this).parents('.item').attr('data-id'));
+    let obj = arr.find(e => {
+      return e.pID === id;
+    });
+    //更新对应的数据
+    obj.number = oldVal;
+    //覆盖回本地数据
+    let jsonStr = JSON.stringify(arr);
+    localStorage.setItem('shopCartData',jsonStr);
+    //重新计算总和和总价
+    sumPrice();
+    //采用 jq对象.children() 只能获取子代元素
+
+    $(this).parents('.item').find('.computed').text(obj.price *obj.number);
+  })
 });
