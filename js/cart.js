@@ -114,11 +114,37 @@ $(() => {
     obj.number = oldVal;
     //覆盖回本地数据
     let jsonStr = JSON.stringify(arr);
-    localStorage.setItem('shopCartData',jsonStr);
+    localStorage.setItem('shopCartData', jsonStr);
     //重新计算总和和总价
     sumPrice();
     //采用 jq对象.children() 只能获取子代元素
 
-    $(this).parents('.item').find('.computed').text(obj.price *obj.number);
+    $(this).parents('.item').find('.computed').text(obj.price * obj.number);
+  });
+
+  $('.item-list').on('click', '.reduce', function () {
+    let oldVal = parseInt($(this).siblings('input').val());
+    //当前是1的话就不能点击
+    if(oldVal === 1){
+      return;
+    }
+    oldVal--;
+    if(oldVal === 1){
+      $(this).addClass('disabled');
+    }
+    $(this).siblings('input').val(oldVal);
+    let id = parseInt($(this).parents('.item').attr('data-id'));
+    let obj = arr.find(e => {
+      return e.pID === id;
+    });
+    // 更新对应的数据
+    obj.number = oldVal;
+    // 还要覆盖回本地数据
+    let jsonStr = JSON.stringify(arr);
+    localStorage.setItem('shopCartData', jsonStr);
+    // 重新计算总数和总价
+    sumPrice();
+    $(this).parents('.item').find('.computed').text(obj.price * obj.number);
   })
+
 });
