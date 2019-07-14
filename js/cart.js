@@ -125,11 +125,11 @@ $(() => {
   $('.item-list').on('click', '.reduce', function () {
     let oldVal = parseInt($(this).siblings('input').val());
     //当前是1的话就不能点击
-    if(oldVal === 1){
+    if (oldVal === 1) {
       return;
     }
     oldVal--;
-    if(oldVal === 1){
+    if (oldVal === 1) {
       $(this).addClass('disabled');
     }
     $(this).siblings('input').val(oldVal);
@@ -145,6 +145,34 @@ $(() => {
     // 重新计算总数和总价
     sumPrice();
     $(this).parents('.item').find('.computed').text(obj.price * obj.number);
+  })
+
+  //实现删除
+  $('.item-list').on('click', '.item-del', function () {
+    let _this = this;
+    $('#dialog-confirm').dialog({
+      resizable: false,
+      height: 140,
+      modal: true,
+      buttons: {
+        "确认": function () {
+          $(this).dialog('close');
+          $(_this).parents('.item').remove();
+          //移除本地数据
+          let id = parseInt($(_this).parents('.item').attr('data-id'));
+          let index = arr.findIndex((e) => {
+            return e.pID === id
+          })
+          arr.splice(index, 1);
+          // 把数据覆盖回本地
+          let jsonStr = JSON.stringify(arr);
+          localStorage.setItem('shopCartData', jsonStr);
+        },
+        "取消": function () {
+          $(this).dialog("close");
+        }
+      }
+    })
   })
 
 });
